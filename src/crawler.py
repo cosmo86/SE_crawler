@@ -28,7 +28,8 @@ import json
 from datetime import datetime
 
 # Get today's date in the same format as your JSON data
-today = datetime.now().strftime("%Y%m%d")
+today = datetime.now().strftime("%Y-%m-%d")
+today_str = datetime.now().strftime("%Y%m%d")
 
 results = []
 
@@ -59,13 +60,13 @@ for i in range(2):
         try:
             next_button = driver.find_element(By.XPATH, "//a[contains(text(),'下一页')]")
             next_button.click()
-            time.sleep(5)  # Wait for the next page to load
+            time.sleep(5) # Wait for the next page to load
         except NoSuchElementException:
             print("No more pages to navigate.")
             break
-
+print(results)
 res_df = pd.DataFrame(results)
-
+print(res_df)
 import os
 
 # Folder name
@@ -76,5 +77,5 @@ if not os.path.exists(folder_name):
     # Create the folder
     os.makedirs(folder_name)
 
-csv_file_path = f"{folder_name}/hotones_{today}.csv"
+csv_file_path = f"{folder_name}/hotones_{today_str}.csv"
 res_df.to_csv(csv_file_path, index=False)
