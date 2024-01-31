@@ -3,6 +3,7 @@ import subprocess
 import sys
 from datetime import datetime
 import os
+import warnings
 
 try:
     import pandas
@@ -19,7 +20,11 @@ except ImportError:
 
 import pandas as pd
 import numpy as np
+# Suppresswarning
+from pandas.core.common import SettingWithCopyWarning
 
+# Ignore SettingWithCopyWarning
+warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 # Create the parser
 parser = argparse.ArgumentParser(description='Process some string.')
@@ -119,52 +124,110 @@ res_market_cap_35.to_csv(f"{folder_name}/res_market_cap_35_{today}.csv")
 res_market_cap_35_100.to_csv(f"{folder_name}/res_market_cap_35_100_{today}.csv")
 res_market_cap_100.to_csv(f"{folder_name}/res_market_cap_100_{today}.csv")
 
+################### Divide SH and SZ ###################
+res_market_cap_35_sh = res_market_cap_35[res_market_cap_35['代码'].str.startswith('6') ]
+res_market_cap_35_sz = res_market_cap_35[res_market_cap_35['代码'].str.startswith('3') | res_market_cap_35['代码'].str.startswith('0') ]
+
+res_market_cap_35_100_sh = res_market_cap_35_100[res_market_cap_35_100['代码'].str.startswith('6') ]
+res_market_cap_35_100_sz = res_market_cap_35_100[res_market_cap_35_100['代码'].str.startswith('3') | res_market_cap_35_100['代码'].str.startswith('0') ]
+
+res_market_cap_100_sh = res_market_cap_100[res_market_cap_100['代码'].str.startswith('6') ]
+res_market_cap_100_sz = res_market_cap_100[res_market_cap_100['代码'].str.startswith('3') | res_market_cap_100['代码'].str.startswith('0') ]
 
 ######### Generate buy signal ###############
-folder_name = '白名单'
-# Check if the folder exists
-if not os.path.exists(folder_name):
-    # Create the folder
-    os.makedirs(folder_name)
+# Parent directory name
+parent_dir = '白名单'
+# Child directory names
+child_dir_sh = '上海'
+child_dir_sz = '深圳'
+# Construct paths for the child directories
+path_sh = os.path.join(parent_dir, child_dir_sh)
+path_sz = os.path.join(parent_dir, child_dir_sz)
+
+# Check if the parent folder doesn't exist
+if not os.path.exists(parent_dir):
+    # Create the directories
+    os.makedirs(path_sh, exist_ok=True)
+    os.makedirs(path_sz, exist_ok=True)
 
 ## Populate temp_templete with dummy variables
 buy_templete = pd.read_csv("templetes/buy_templete.csv",encoding="GBK")
-temp_templete = buy_templete[['Accounts', 'BuyPriceType', 'BuyPrice',
+buy_templete = buy_templete[['Accounts', 'BuyPriceType', 'BuyPrice',
        'BuyPriceFactor', 'BuyVolume', 'SellPriceType', 'SellPrice',
        'SellPriceFactor', 'SellVolume', 'Tag_A', 'Tag_B']]
 for i in range(5):
-    temp_templete = pd.concat([temp_templete,temp_templete])
+    buy_templete = pd.concat([buy_templete,buy_templete])
 
 
 if args.size == "small":
-    temp_templete = temp_templete.head(len(res_market_cap_35))
-    print(f"Length of temp_templete is {len(temp_templete)}; length of res_market_cap_35 is {len(res_market_cap_35)}")
-    temp_templete['SecurityId'] = res_market_cap_35['代码'].apply(lambda x: 's-'+x).values
-    temp_templete['SecurityName'] = res_market_cap_35['名称'].values
+
+    # SH
+    temp_templete = buy_templete.head(len(res_market_cap_35_sh))
+    temp_templete['SecurityId'] = res_market_cap_35_sh['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_35_sh['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
        'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv")
-elif args.size == "med":
-    temp_templete = temp_templete.head(len(res_market_cap_35_100))
-    temp_templete['SecurityId'] = res_market_cap_35_100['代码'].apply(lambda x: 's-'+x).values
-    temp_templete['SecurityName'] = res_market_cap_35_100['名称'].values
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
+
+    #SZ
+    temp_templete = buy_templete.head(len(res_market_cap_35_sz))
+    temp_templete['SecurityId'] = res_market_cap_35_sz['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_35_sz['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
        'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv")
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
+
+
+elif args.size == "mid":
+    #SH
+    temp_templete = buy_templete.head(len(res_market_cap_35_100_sh))
+    temp_templete['SecurityId'] = res_market_cap_35_100_sh['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_35_100_sh['名称'].values
+    new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
+       'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
+       'Tag_B']
+    temp_templete = temp_templete[new_order]
+    for i in range(3):
+        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+    
+    #SZ
+    temp_templete = buy_templete.head(len(res_market_cap_35_100_sz))
+    temp_templete['SecurityId'] = res_market_cap_35_100_sz['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_35_100_sz['名称'].values
+    new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
+       'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
+       'Tag_B']
+    temp_templete = temp_templete[new_order]
+    for i in range(3):
+        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
     
 else:
-    temp_templete = temp_templete.head(len(res_market_cap_100))
-    temp_templete['SecurityId'] = res_market_cap_100['代码'].apply(lambda x: 's-'+x).values
-    temp_templete['SecurityName'] = res_market_cap_100['名称'].values
+    #SH
+    temp_templete = buy_templete.head(len(res_market_cap_100_sh))
+    temp_templete['SecurityId'] = res_market_cap_100_sh['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_100_sh['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
        'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv")
+        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+
+    #SZ
+    temp_templete = buy_templete.head(len(res_market_cap_100_sz))
+    temp_templete['SecurityId'] = res_market_cap_100_sz['代码'].apply(lambda x: 's-'+x).values
+    temp_templete['SecurityName'] = res_market_cap_100_sz['名称'].values
+    new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
+       'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
+       'Tag_B']
+    temp_templete = temp_templete[new_order]
+    for i in range(3):
+        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+
+print("处理完成！")

@@ -1,0 +1,3 @@
+,SecurityId,SecurityName,Accounts,BuyPriceType,BuyPrice,BuyPriceFactor,BuyVolume,SellPriceType,SellPrice,SellPriceFactor,SellVolume,Tag_A,Tag_B
+0,s-300750,宁德时代,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+1,s-300114,中航电测,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
