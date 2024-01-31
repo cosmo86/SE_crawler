@@ -41,23 +41,24 @@ else:
 today = datetime.now().strftime("%Y%m%d")
 
 try:
-    all_A = pd.read_csv(f"每日源文件/全部Ａ股{today}.csv" , encoding="GBK")
+    all_A = pd.read_csv(f"ALL_A/全部Ａ股{today}.csv" , encoding="GBK")
 
 except:
     print("[全部A股] 文件不存在，请检查文件名或者日期")
 
 try:
-    yrtd_limup = pd.read_csv(f"每日源文件/昨日涨停{today}.csv" , encoding="GBK")
+    yrtd_limup = pd.read_csv(f"yrst_limup/昨日涨停{today}.csv" , encoding="GBK")
 except:
     print("[昨日涨停] 文件不存在，请检查文件名或者日期")
 
 try:
-    hotones = pd.read_csv(f"每日源文件/人气榜{today}.csv" , encoding="GBK")
-    user_provided_hotones = True
+    hotones = pd.read_csv(f"hotones/hotones_{today}.csv" )
 except FileNotFoundError:
     print("[东方财富人气榜前30名] 文件不存在，请检查文件名或者日期")
-except Exception as e:
-    print(f"错误发生！！！ 请联系管理员: {e}")
+except UnicodeDecodeError:
+    print("用户正在使用用户自己提供的 人气榜排名")
+    user_provided_hotones = True
+    hotones = pd.read_csv(f"hotones/hotones_{today}.csv" ,encoding="GBK")
 
 ###################### Helper function ######################
 def convert_market_cap(x):
