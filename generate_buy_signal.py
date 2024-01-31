@@ -22,7 +22,7 @@ import numpy as np
 
 
 # Create the parser
-parser = argparse.ArgumentParser(description='Process some integers.')
+parser = argparse.ArgumentParser(description='Process some string.')
 parser.add_argument('--size', type=str, help='Size parameter')
 args = parser.parse_args()
 if args.size:
@@ -36,29 +36,35 @@ else:
 today = datetime.now().strftime("%Y%m%d")
 
 try:
-    all_A = pd.read_csv(f"ALL_A/全部A股{today}" , encoding="GBK")
+    all_A = pd.read_csv(f"ALL_A/全部Ａ股{today}.csv" , encoding="GBK")
 
 except:
     print("[全部A股] 文件不存在，请检查文件名或者日期")
 
 try:
-    yrtd_limup = pd.read_csv(f"昨日涨停{today}.csv" , encoding="GBK")
+    yrtd_limup = pd.read_csv(f"yrst_limup/昨日涨停{today}.csv" , encoding="GBK")
 except:
     print("[昨日涨停] 文件不存在，请检查文件名或者日期")
 
 try:
-    hotones = pd.read_csv(f"hotones_{today}.csv" )
-except:
+    hotones = pd.read_csv(f"hotones/hotones_{today}.csv" )
+except FileNotFoundError:
     print("[东方财富人气榜前30名] 文件不存在，请检查文件名或者日期")
+except UnicodeDecodeError:
+    print("用户正在使用用户自己提供的 人气榜排名")
+    user_provided_hotones = True
+    hotones = pd.read_csv(f"hotones/hotones_{today}.csv" ,encoding="GBK")
 
 ###################### Helper function ######################
 def convert_market_cap(x):
-    if '亿' in x:
-        # Remove '亿' and convert to float, then multiply by a billion
-        return float(x.replace('亿', '')) 
-    elif x == 'nan':
-        # Convert 'nan' string to actual NaN
-        return np.nan
+    if isinstance(x, str):
+        if '亿' in x:
+            # Remove '亿' and convert to float, then multiply by a billion
+            return float(x.replace('亿', '')) 
+    else:
+        if x == 'nan' or x==np.nan:
+            # Convert 'nan' string to actual NaN
+            return np.nan
 ###################### Helper function ###################### 
 
 
@@ -66,9 +72,12 @@ all_A.rename(columns={'涨幅%': 'fluc_today'}, inplace=True)
 all_A['fluc_today']= pd.to_numeric(all_A['fluc_today'], errors='coerce')
 top_100 = all_A.sort_values(by='fluc_today', ascending=False).head(100)
 
-hotones.rename(columns={'SRCSECURITYCODE': '代码'}, inplace=True)
-hotones["代码"] = hotones["代码"].apply(lambda x: x[2:])
-hotones = hotones.query("RANK <= 30")
+if user_provided_hotones:
+    print("用户正在使用用户自己提供的 人气榜排名, 不再对排名做更多处理")
+else:
+    hotones.rename(columns={'SRCSECURITYCODE': '代码'}, inplace=True)
+    hotones["代码"] = hotones["代码"].apply(lambda x: x[2:])
+    hotones = hotones.query("RANK <= 30")
 
 combined_before_filter = pd.concat([ hotones[["代码"]] , top_100[["代码"]], yrtd_limup[["代码"]]  ])
 
@@ -77,6 +86,8 @@ combined_before_filter =combined_before_filter.merge(all_A, how="left", left_on=
 combined_filtered = combined_before_filter[~combined_before_filter['名称'].str.contains( 'ST|\*ST|N' ,na=False)]
 combined_filtered_84 = combined_filtered[~combined_filtered['代码'].str.startswith('8') |  combined_filtered['代码'].str.startswith('4')]
 
+
+combined_filtered_84["流通市值Z"] = combined_filtered_84["流通市值Z"].apply(convert_market_cap)
 combined_filtered_84.rename(columns={'10日涨幅%': 'fluc_10day', '20日涨幅%': 'fluc_20day'}, inplace=True)
 combined_filtered_84["fluc_10day"] = combined_filtered_84["fluc_10day"].apply(lambda x: float(x))
 combined_filtered_84["fluc_20day"] = combined_filtered_84["fluc_20day"].apply(lambda x: float(x))
@@ -116,10 +127,18 @@ if not os.path.exists(folder_name):
     # Create the folder
     os.makedirs(folder_name)
 
+## Populate temp_templete with dummy variables
 buy_templete = pd.read_csv("templetes/buy_templete.csv",encoding="GBK")
+temp_templete = buy_templete[['Accounts', 'BuyPriceType', 'BuyPrice',
+       'BuyPriceFactor', 'BuyVolume', 'SellPriceType', 'SellPrice',
+       'SellPriceFactor', 'SellVolume', 'Tag_A', 'Tag_B']]
+for i in range(5):
+    temp_templete = pd.concat([temp_templete,temp_templete])
+
 
 if args.size == "small":
-    temp_templete = buy_templete.head(len(res_market_cap_35))
+    temp_templete = temp_templete.head(len(res_market_cap_35))
+    print(f"Length of temp_templete is {len(temp_templete)}; length of res_market_cap_35 is {len(res_market_cap_35)}")
     temp_templete['SecurityId'] = res_market_cap_35['代码'].apply(lambda x: 's-'+x).values
     temp_templete['SecurityName'] = res_market_cap_35['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
@@ -129,7 +148,7 @@ if args.size == "small":
     for i in range(3):
         temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv")
 elif args.size == "med":
-    temp_templete = buy_templete.head(len(res_market_cap_35_100))
+    temp_templete = temp_templete.head(len(res_market_cap_35_100))
     temp_templete['SecurityId'] = res_market_cap_35_100['代码'].apply(lambda x: 's-'+x).values
     temp_templete['SecurityName'] = res_market_cap_35_100['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
@@ -140,7 +159,7 @@ elif args.size == "med":
         temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv")
     
 else:
-    temp_templete = buy_templete.head(len(res_market_cap_100))
+    temp_templete = temp_templete.head(len(res_market_cap_100))
     temp_templete['SecurityId'] = res_market_cap_100['代码'].apply(lambda x: 's-'+x).values
     temp_templete['SecurityName'] = res_market_cap_100['名称'].values
     new_order = ['SecurityId', 'SecurityName','Accounts', 'BuyPriceType', 'BuyPrice', 'BuyPriceFactor', 'BuyVolume',
