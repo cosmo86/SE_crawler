@@ -170,7 +170,7 @@ if args.size == "small":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
 
     #SZ
     temp_templete = buy_templete.head(len(res_market_cap_35_sz))
@@ -181,7 +181,7 @@ if args.size == "small":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
 
 
 elif args.size == "mid":
@@ -194,7 +194,7 @@ elif args.size == "mid":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
     
     #SZ
     temp_templete = buy_templete.head(len(res_market_cap_35_100_sz))
@@ -205,7 +205,7 @@ elif args.size == "mid":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
     
 else:
     #SH
@@ -218,7 +218,7 @@ else:
     temp_templete = temp_templete[new_order]
     #print(f"length of temp_templete is {len(temp_templete)}")
     for i in range(3):
-        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
 
     #SZ
     temp_templete = buy_templete.head(len(res_market_cap_100_sz))
@@ -230,6 +230,6 @@ else:
     temp_templete = temp_templete[new_order]
     #print(f"length of temp_templete is {len(temp_templete)}")
     for i in range(3):
-        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False, encoding="GBK")
 
 print("处理完成！")
