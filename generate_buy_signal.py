@@ -194,7 +194,7 @@ elif args.size == "mid":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
     
     #SZ
     temp_templete = buy_templete.head(len(res_market_cap_35_100_sz))
@@ -205,7 +205,7 @@ elif args.size == "mid":
        'Tag_B']
     temp_templete = temp_templete[new_order]
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
     
 else:
     #SH
@@ -216,8 +216,9 @@ else:
        'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
        'Tag_B']
     temp_templete = temp_templete[new_order]
+    #print(f"length of temp_templete is {len(temp_templete)}")
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sh}/BuyGZ{i+1}.csv", index=False)
 
     #SZ
     temp_templete = buy_templete.head(len(res_market_cap_100_sz))
@@ -227,7 +228,8 @@ else:
        'SellPriceType', 'SellPrice', 'SellPriceFactor', 'SellVolume', 'Tag_A',
        'Tag_B']
     temp_templete = temp_templete[new_order]
+    #print(f"length of temp_templete is {len(temp_templete)}")
     for i in range(3):
-        temp_templete.to_csv(f"{folder_name}/BuyGZ{i+1}.csv", index=False)
+        temp_templete.to_csv(f"{path_sz}/BuyGZ{i+1}.csv", index=False)
 
 print("处理完成！")
