@@ -84,7 +84,7 @@ if user_provided_hotones:
 else:
     hotones.rename(columns={'SRCSECURITYCODE': '代码'}, inplace=True)
     hotones["代码"] = hotones["代码"].apply(lambda x: x[2:])
-    hotones = hotones.query("RANK <= 30")
+    #hotones = hotones.query("RANK <= 30")
 
 combined_before_filter = pd.concat([ hotones[["代码"]] , top_100[["代码"]], yrtd_limup[["代码"]]  ])
 
