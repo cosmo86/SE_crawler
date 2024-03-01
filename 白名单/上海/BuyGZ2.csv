@@ -1,8 +1,0 @@
-SecurityId,SecurityName,Accounts,BuyPriceType,BuyPrice,BuyPriceFactor,BuyVolume,SellPriceType,SellPrice,SellPriceFactor,SellVolume,Tag_A,Tag_B
-s-603019,中科曙光,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-601127,赛力斯,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-601901,方正证券,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-688012,中微公司,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-600895,张江高科,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-688072,拓荆科技,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-600183,生益科技,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B

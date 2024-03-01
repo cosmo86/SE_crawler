@@ -1,0 +1,12 @@
+SecurityId,SecurityName,Accounts,BuyPriceType,BuyPrice,BuyPriceFactor,BuyVolume,SellPriceType,SellPrice,SellPriceFactor,SellVolume,Tag_A,Tag_B
+s-600895,张江高科,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-601127,赛力斯,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-603019,中科曙光,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-603220,中贝通信,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-603960,克来机电,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-600571,信雅达,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-688339,亿华通-U,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-600996,贵广网络,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-600353,旭光电子,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-603728,鸣志电器,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
+s-603927,中科软,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B

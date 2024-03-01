@@ -1,7 +1,0 @@
-SecurityId,SecurityName,Accounts,BuyPriceType,BuyPrice,BuyPriceFactor,BuyVolume,SellPriceType,SellPrice,SellPriceFactor,SellVolume,Tag_A,Tag_B
-s-002317,众生药业,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-002673,西部证券,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-000628,高新发展,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-000063,中兴通讯,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-300308,中际旭创,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B
-s-002371,北方华创,s-301000064197:10000,UpperLimitPrice,0,1,0,AnyPrice,0,1,0,A,B

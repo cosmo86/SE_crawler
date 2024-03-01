@@ -1,0 +1,2 @@
+SecurityID,ExchangeID,BuyTriggerVolume,CancelVolume,Position,MaxTriggerTimes,LowerTimeLimit,ScoutBuyTriggerCashLim,ScoutMonitorDuration,Cond2Percent,Cond2HighTime,Cond2TrackDuration,CancelTriggerVolumeLarge,Cond4LowTime,Cond4HighTime
+
