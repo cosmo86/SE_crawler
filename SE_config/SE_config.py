@@ -35,9 +35,9 @@ ROW_TEMPLETE = {
                 "ExchangeID": 0,
                 "BuyTriggerVolume": 0,
                 "CancelVolume":0,
-                "Position":10,
+                "Position":10000, # 元
                 "MaxTriggerTimes": 3,
-                "LowerTimeLimit": 0,
+                "LowerTimeLimit": 2000000000,
                 "ScoutBuyTriggerCashLim": 0,
                 "ScoutMonitorDuration" : 600000000000, 
                 "Cond2Percent" : -0.35,
