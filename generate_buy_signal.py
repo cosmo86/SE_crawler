@@ -162,6 +162,7 @@ for i in range(len(SE_engine_df)):
         res_list.append(temp_res_row.copy())
 
 res_SE_df = pd.DataFrame(res_list)
+res_SE_df['SecurityID'] = res_SE_df['SecurityID'].apply(lambda x: str(x))
 res_SE_df.to_csv(f"{SE_path}/SE_daily_pool_{today}",index=False)
 print("SE pool generated!")
 
